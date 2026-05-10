@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Demo Senaryo Kartları</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+  :root {
+    --p50:#faf5ff; --p100:#f3e8ff; --p200:#e9d5ff;
+    --p500:#a855f7; --p600:#9333ea; --p700:#7e22ce; --p900:#581c87;
+    --s50:#f8fafc; --s100:#f1f5f9; --s200:#e2e8f0;
+    --s600:#475569; --s700:#334155; --s800:#1e293b;
+    --green:#16a34a; --red:#dc2626; --amber:#d97706;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--s50);
+    color: var(--s800);
+    min-height: 100vh;
+    padding: 24px 20px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  header h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--p900);
+    border-bottom: 3px solid var(--p500);
+    display: inline-block;
+    padding-bottom: 6px;
+  }
+  header p {
+    margin-top: 8px;
+    font-size: 0.82rem;
+    color: var(--s600);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: white;
+    border-radius: 14px;
+    border: 1px solid var(--p200);
+    box-shadow: 0 2px 10px rgba(0,0,0,.07);
+    overflow: hidden;
+    transition: transform .15s, box-shadow .15s;
+    cursor: pointer;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(147,51,234,.15);
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, var(--p700), var(--p900));
+    color: white;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-header .icon { font-size: 1.4rem; }
+  .card-header .title { font-weight: 600; font-size: 0.95rem; }
+  .card-header .subtitle { font-size: 0.72rem; opacity: .8; margin-top: 1px; }
+
+  .card-body { padding: 14px 16px; }
+
+  .inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px 14px;
+    margin-bottom: 14px;
+  }
+  .inp-row { display: flex; flex-direction: column; }
+  .inp-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--p700);
+    margin-bottom: 2px;
+  }
+  .inp-val {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--s800);
+    background: var(--p50);
+    border: 1px solid var(--p200);
+    border-radius: 6px;
+    padding: 4px 8px;
+  }
+  .inp-val.flag-on {
+    background: #fef2f2;
+    border-color: #fca5a5;
+    color: var(--red);
+    font-weight: 700;
+  }
+  .inp-val.flag-heat {
+    background: #fff7ed;
+    border-color: #fdba74;
+    color: var(--amber);
+    font-weight: 700;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--s200);
+    margin-bottom: 12px;
+  }
+
+  .result {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--s50);
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+  .result-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--s600);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .result-val {
+    font-family: 'Fira Code', monospace;
+    font-size: 1.7rem;
+    font-weight: 700;
+  }
+  .result-val.pos { color: var(--green); }
+  .result-val.neg { color: var(--red); }
+  .result-val.neu { color: var(--s700); }
+
+  .badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+    letter-spacing: .3px;
+  }
+  .badge.pos { background: #dcfce7; color: var(--green); }
+  .badge.neg { background: #fee2e2; color: var(--red); }
+  .badge.neu { background: var(--s100); color: var(--s700); }
+
+  .copy-btn {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 7px;
+    border: none;
+    border-radius: 8px;
+    background: var(--p100);
+    color: var(--p700);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .copy-btn:hover { background: var(--p200); }
+  .copy-btn.copied { background: #dcfce7; color: var(--green); }
+
+  footer {
+    text-align: center;
+    margin-top: 28px;
+    font-size: 0.73rem;
+    color: var(--s600);
+  }
+  footer a { color: var(--p600); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌾 Demo Senaryo Kartları</h1>
+  <p>Her kartı demo'da girerek modelin tepkisini göster &nbsp;·&nbsp;
+     <a href="http://localhost:5000" target="_blank">Demo → localhost:5000</a>
+  </p>
+</header>
+
+<div class="grid">
+
+  <!-- SENARYO 1 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="icon">🍂</span>
+      <div>
+        <div class="title">Senaryo 1 — Normal Sonbahar Günü</div>
+        <div class="subtitle">Ekim · Sakin piyasa · Hava koşulları normal</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="inputs">
+        <div class="inp-row">
+          <span class="inp-label">Önceki Fiyat</span>
+          <span class="inp-val">15 ₺/kg</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Önceki Değişim</span>
+          <span class="inp-val">+2 %</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Son 3 Seans Oynaklık</span>
+          <span class="inp-val">3 %</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Ort. Sıcaklık</span>
+          <span class="inp-val">12 °C</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Yağış</span>
+          <span class="inp-val">2 mm</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Ay</span>
+          <span class="inp-val">10</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Don Olayı</span>
+          <span class="inp-val">0 (Yok)</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Aşırı Sıcak</span>
+          <span class="inp-val">0 (Yok)</span>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="result">
+        <div>
+          <div class="result-label">Model Tahmini</div>
+          <div class="result-val pos">+2.21 %</div>
+        </div>
+        <span class="badge pos">Hafif Artış</span>
+      </div>
+      <button class="copy-btn" onclick="copyInputs(this, {Onceki_Seans_En_Dusuk_Fiyat:15, Onceki_Seans_Degisim_Yuzdesi:2, Fiyat_Oynakligi_L3:3, Ort_Sicaklik_C:12, Toplam_Yagis_mm:2, Don_Olayi:0, Asiri_Sicak_Soku:0, ay:10})">
+        📋 Değerleri Kopyala
+      </button>
+    </div>
+  </div>
+
+  <!-- SENARYO 2 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="icon">🌨️</span>
+      <div>
+        <div class="title">Senaryo 2 — Kış Donu Şoku</div>
+        <div class="subtitle">Ocak · Don olayı var · Tedarik azalır</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="inputs">
+        <div class="inp-row">
+          <span class="inp-label">Önceki Fiyat</span>
+          <span class="inp-val">12 ₺/kg</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Önceki Değişim</span>
+          <span class="inp-val">-5 %</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Son 3 Seans Oynaklık</span>
+          <span class="inp-val">9 %</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Ort. Sıcaklık</span>
+          <span class="inp-val">-2 °C</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Yağış</span>
+          <span class="inp-val">5 mm</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Ay</span>
+          <span class="inp-val">1</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Don Olayı</span>
+          <span class="inp-val flag-on">1 (VAR ⚠️)</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Aşırı Sıcak</span>
+          <span class="inp-val">0 (Yok)</span>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="result">
+        <div>
+          <div class="result-label">Model Tahmini</div>
+          <div class="result-val pos">+1.30 %</div>
+        </div>
+        <span class="badge pos">Piyasa Ort. Artış</span>
+      </div>
+      <button class="copy-btn" onclick="copyInputs(this, {Onceki_Seans_En_Dusuk_Fiyat:12, Onceki_Seans_Degisim_Yuzdesi:-5, Fiyat_Oynakligi_L3:9, Ort_Sicaklik_C:-2, Toplam_Yagis_mm:5, Don_Olayi:1, Asiri_Sicak_Soku:0, ay:1})">
+        📋 Değerleri Kopyala
+      </button>
+    </div>
+  </div>
+
+  <!-- SENARYO 3 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="icon">🌡️</span>
+      <div>
+        <div class="title">Senaryo 3 — Yaz Sıcak Dalgası</div>
+        <div class="subtitle">Temmuz · Aşırı sıcak · Yüksek oynaklık</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="inputs">
+        <div class="inp-row">
+          <span class="inp-label">Önceki Fiyat</span>
+          <span class="inp-val">25 ₺/kg</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Önceki Değişim</span>
+          <span class="inp-val">+10 %</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Son 3 Seans Oynaklık</span>
+          <span class="inp-val">14 %</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Ort. Sıcaklık</span>
+          <span class="inp-val">36 °C</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Yağış</span>
+          <span class="inp-val">0 mm</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Ay</span>
+          <span class="inp-val">7</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Don Olayı</span>
+          <span class="inp-val">0 (Yok)</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Aşırı Sıcak</span>
+          <span class="inp-val flag-heat">1 (VAR 🔥)</span>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="result">
+        <div>
+          <div class="result-label">Model Tahmini</div>
+          <div class="result-val pos">+1.90 %</div>
+        </div>
+        <span class="badge pos">Orta Artış</span>
+      </div>
+      <button class="copy-btn" onclick="copyInputs(this, {Onceki_Seans_En_Dusuk_Fiyat:25, Onceki_Seans_Degisim_Yuzdesi:10, Fiyat_Oynakligi_L3:14, Ort_Sicaklik_C:36, Toplam_Yagis_mm:0, Don_Olayi:0, Asiri_Sicak_Soku:1, ay:7})">
+        📋 Değerleri Kopyala
+      </button>
+    </div>
+  </div>
+
+  <!-- SENARYO 4 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="icon">🌧️</span>
+      <div>
+        <div class="title">Senaryo 4 — Bahar Yağmuru</div>
+        <div class="subtitle">Nisan · Yoğun yağış · Arz baskısı yok</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="inputs">
+        <div class="inp-row">
+          <span class="inp-label">Önceki Fiyat</span>
+          <span class="inp-val">8 ₺/kg</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Önceki Değişim</span>
+          <span class="inp-val">-3 %</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Son 3 Seans Oynaklık</span>
+          <span class="inp-val">5 %</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Ort. Sıcaklık</span>
+          <span class="inp-val">15 °C</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Yağış</span>
+          <span class="inp-val">28 mm</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Ay</span>
+          <span class="inp-val">4</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Don Olayı</span>
+          <span class="inp-val">0 (Yok)</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Aşırı Sıcak</span>
+          <span class="inp-val">0 (Yok)</span>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="result">
+        <div>
+          <div class="result-label">Model Tahmini</div>
+          <div class="result-val neg">−0.33 %</div>
+        </div>
+        <span class="badge neg">Hafif Düşüş</span>
+      </div>
+      <button class="copy-btn" onclick="copyInputs(this, {Onceki_Seans_En_Dusuk_Fiyat:8, Onceki_Seans_Degisim_Yuzdesi:-3, Fiyat_Oynakligi_L3:5, Ort_Sicaklik_C:15, Toplam_Yagis_mm:28, Don_Olayi:0, Asiri_Sicak_Soku:0, ay:4})">
+        📋 Değerleri Kopyala
+      </button>
+    </div>
+  </div>
+
+  <!-- SENARYO 5 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="icon">📈</span>
+      <div>
+        <div class="title">Senaryo 5 — Hasat Dönemi Oynaklığı</div>
+        <div class="subtitle">Ağustos · Bol ürün · Yüksek geçmiş oynaklık</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="inputs">
+        <div class="inp-row">
+          <span class="inp-label">Önceki Fiyat</span>
+          <span class="inp-val">20 ₺/kg</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Önceki Değişim</span>
+          <span class="inp-val">+18 %</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Son 3 Seans Oynaklık</span>
+          <span class="inp-val">20 %</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Ort. Sıcaklık</span>
+          <span class="inp-val">22 °C</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Yağış</span>
+          <span class="inp-val">0 mm</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Ay</span>
+          <span class="inp-val">8</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Don Olayı</span>
+          <span class="inp-val">0 (Yok)</span>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">Aşırı Sıcak</span>
+          <span class="inp-val">0 (Yok)</span>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="result">
+        <div>
+          <div class="result-label">Model Tahmini</div>
+          <div class="result-val pos">+1.82 %</div>
+        </div>
+        <span class="badge pos">Orta Artış</span>
+      </div>
+      <button class="copy-btn" onclick="copyInputs(this, {Onceki_Seans_En_Dusuk_Fiyat:20, Onceki_Seans_Degisim_Yuzdesi:18, Fiyat_Oynakligi_L3:20, Ort_Sicaklik_C:22, Toplam_Yagis_mm:0, Don_Olayi:0, Asiri_Sicak_Soku:0, ay:8})">
+        📋 Değerleri Kopyala
+      </button>
+    </div>
+  </div>
+
+</div><!-- /grid -->
+
+<footer>
+  Konya Tarım Fiyat Tahmini &nbsp;·&nbsp; Random Forest (64 özellik, 21.168 kayıt) &nbsp;·&nbsp;
+  Back-test RMSE: 1.92 puan &nbsp;·&nbsp;
+  <a href="http://localhost:5000" target="_blank">Demo Sunucusu →</a>
+</footer>
+
+<script>
+function copyInputs(btn, inputs) {
+  const txt = JSON.stringify(inputs, null, 2);
+  navigator.clipboard.writeText(txt).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✅ Kopyalandı!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>
